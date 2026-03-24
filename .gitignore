@@ -8,5 +8,3 @@ staticfiles/
 *.log
 .env
 .env.local
-db.sqlite3
-media/
