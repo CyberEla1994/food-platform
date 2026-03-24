@@ -1,0 +1,82 @@
+{% extends "products/base.html" %}
+
+{% block og_tags %}
+    <meta property="og:title" content="Оформление заказа - FoodPlatform">
+    <meta property="og:description" content="Укажите адрес доставки и данные карты для оплаты">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:type" content="website">
+
+    <meta name="twitter:title" content="Оформление заказа - FoodPlatform">
+    <meta name="twitter:description" content="Укажите адрес доставки и данные карты для оплаты">
+{% endblock %}
+
+{% block content %}
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-lg-8">
+            <div class="card shadow-lg p-4 card-login">
+                <h3 class="text-center mb-4">Оформление заказа</h3>
+
+                <!-- Состав заказа -->
+                <div class="create-order-summary mb-4">
+                    <h5 class="mb-3">Состав заказа</h5>
+                    <ul class="list-group list-group-flush mb-3">
+                        {% for item in baskets %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>{{ item.product.name }} × {{ item.quantity }}</span>
+                                <span class="price">{{ item.sum }} ₽</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <p class="text-end mb-0">
+                        <strong class="basket-total">Итого: {{ total_sum }} ₽</strong>
+                    </p>
+                </div>
+
+                <hr class="border-secondary my-4">
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger mb-3" role="alert">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                <form method="post" action="{% url 'create_order' %}" class="login-form">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="{{ form.card_number.id_for_label }}"
+                               class="form-label">{{ form.card_number.label }}</label>
+                        {{ form.card_number }}
+                        {% if form.card_number.help_text %}
+                            <div class="form-text text-secondary">{{ form.card_number.help_text }}</div>{% endif %}
+                        {% if form.card_number.errors %}
+                            <div class="invalid-feedback d-block">{{ form.card_number.errors }}</div>{% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.delivery_address.id_for_label }}"
+                               class="form-label">{{ form.delivery_address.label }}</label>
+                        {{ form.delivery_address }}
+                        {% if form.delivery_address.errors %}
+                            <div class="invalid-feedback d-block">{{ form.delivery_address.errors }}</div>{% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.comment.id_for_label }}" class="form-label">{{ form.comment.label }}</label>
+                        {{ form.comment }}
+                        {% if form.comment.errors %}
+                            <div class="invalid-feedback d-block">{{ form.comment.errors }}</div>{% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100">Оформить заказ</button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <a href="{% url 'basket' %}" class="login-link">Вернуться в корзину</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block extra_js %}{% endblock %}

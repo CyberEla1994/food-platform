@@ -1,0 +1,156 @@
+{% extends "products/base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow-lg p-4 card-login">
+            <h3 class="text-center mb-4">Личный кабинет</h3>
+
+            {% if profile_filled and not show_form %}
+
+                <div class="text-center mb-4">
+                    <div class="profile-avatar-wrapper d-inline-block position-relative">
+                        <img src="{{ user.get_avatar_url }}" alt="Аватар" class="profile-avatar rounded-circle">
+                        <a href="{% url 'users:profile' %}?edit=1" class="profile-avatar-edit" title="Изменить аватар">
+                            <span class="material-symbols-outlined" style="font-size:16px">edit</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="profile-data">
+                    <div class="mb-3">
+                        <span class="text-secondary small">Имя</span>
+                        <div class="text-white">{{ user.first_name|default:"—" }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <span class="text-secondary small">Фамилия</span>
+                        <div class="text-white">{{ user.last_name|default:"—" }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <span class="text-secondary small">Пол</span>
+                        <div class="text-white">{{ user.get_gender_display|default:"—" }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <span class="text-secondary small">Дата рождения</span>
+                        <div class="text-white">{% if user.birth_date %}{{ user.birth_date|date:"d.m.Y" }}{% else %}—{% endif %}</div>
+                    </div>
+                    <div class="mb-3">
+                        <span class="text-secondary small">Телефон</span>
+                        <div class="text-white">{{ user.phone|default:"—" }}</div>
+                    </div>
+                    <div class="mb-3">
+                        <span class="text-secondary small">Email</span>
+                        <div class="text-white">{{ user.email|default:"—" }}</div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-3 d-flex flex-column gap-2">
+                    <a href="{% url 'users:profile' %}?edit=1" class="btn btn-success">Редактировать</a>
+                    <a href="{% url 'users:password_change' %}" class="login-link">Сменить пароль</a>
+                </div>
+
+            {% else %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger mb-3" role="alert">{{ form.non_field_errors }}</div>
+                {% endif %}
+
+                <form method="post" action="{% url 'users:profile' %}" class="login-form" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="text-center mb-4">
+                        <img src="{{ user.get_avatar_url }}" alt="Аватар" class="profile-avatar rounded-circle mb-2" id="avatarPreview">
+                        <div class="d-flex justify-content-center gap-2 mt-1">
+                            <label for="{{ form.avatar.id_for_label }}" class="btn btn-sm btn-outline-secondary">
+                                <span class="material-symbols-outlined align-middle me-1" style="font-size:18px">photo_camera</span>
+                                Изменить фото
+                            </label>
+                            {% if user.avatar %}
+                                <a href="{% url 'users:avatar_delete' %}" class="btn btn-sm btn-outline-danger">
+                                    <span class="material-symbols-outlined align-middle me-1" style="font-size:18px">delete</span>
+                                    Удалить фото
+                                </a>
+                            {% endif %}
+                            {{ form.avatar }}
+                        </div>
+                        {% if form.avatar.errors %}<div class="invalid-feedback d-block">{{ form.avatar.errors }}</div>{% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.first_name.id_for_label }}" class="form-label">{{ form.first_name.label }}</label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}<div class="invalid-feedback d-block">{{ form.first_name.errors }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.last_name.id_for_label }}" class="form-label">{{ form.last_name.label }}</label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}<div class="invalid-feedback d-block">{{ form.last_name.errors }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.gender.id_for_label }}" class="form-label">{{ form.gender.label }}</label>
+                        {{ form.gender }}
+                        {% if form.gender.errors %}<div class="invalid-feedback d-block">{{ form.gender.errors }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.birth_date.id_for_label }}" class="form-label">{{ form.birth_date.label }}</label>
+                        {{ form.birth_date }}
+                        {% if form.birth_date.errors %}<div class="invalid-feedback d-block">{{ form.birth_date.errors }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.phone.id_for_label }}" class="form-label">{{ form.phone.label }}</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}<div class="invalid-feedback d-block">{{ form.phone.errors }}</div>{% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}<div class="invalid-feedback d-block">{{ form.email.errors }}</div>{% endif %}
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 mb-2">Сохранить профиль</button>
+                </form>
+
+                <div class="text-center mt-3">
+                    {% if profile_filled %}<a href="{% url 'users:profile' %}" class="login-link me-2">Отмена</a>{% endif %}
+                    <a href="{% url 'users:password_change' %}" class="login-link">Сменить пароль</a>
+                </div>
+
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var el = document.querySelector('.js-date-input');
+    if (el && typeof flatpickr !== 'undefined') {
+        flatpickr(el, {
+            dateFormat: 'd.m.Y',
+            locale: 'ru',
+            allowInput: true
+        });
+    }
+
+    var avatarInput = document.getElementById('id_avatar');
+    var preview = document.getElementById('avatarPreview');
+    if (avatarInput && preview) {
+        avatarInput.addEventListener('change', function () {
+            var file = this.files[0];
+            if (file) {
+                preview.src = URL.createObjectURL(file);
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

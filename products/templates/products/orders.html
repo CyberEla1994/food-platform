@@ -1,0 +1,43 @@
+{% extends "products/base.html" %}
+
+{% block content %}
+
+<h2 class="mb-4">Мои заказы</h2>
+
+{% for order in orders %}
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+
+            <h5 class="card-title">Заказ №{{ order.id }}</h5>
+
+            <p><strong>Адрес доставки:</strong> {{ order.delivery_address }}</p>
+            <p><strong>Статус:</strong> {{ order.get_status_display }}</p>
+            <p><strong>Дата:</strong> {{ order.created }}</p>
+            <p class="fw-bold fs-5">Сумма: {{ order.total_price }} ₽</p>
+
+            <hr>
+
+            <ul class="list-group">
+                {% for item in order.items.all %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>
+                            {{ item.product.name }} —
+                            {{ item.quantity }} шт
+                        </span>
+                        <span>
+                            {{ item.sum }} ₽
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+
+        </div>
+    </div>
+
+{% empty %}
+    <div class="alert alert-info">
+        Заказов пока нет
+    </div>
+{% endfor %}
+
+{% endblock %}

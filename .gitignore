@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+
+staticfiles/
+.idea/
+*.log
+.env
+.env.local
+db.sqlite3
+media/

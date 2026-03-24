@@ -1,0 +1,58 @@
+{% extends "products/base.html" %}
+{% load static %}
+
+{% block og_tags %}
+    <meta property="og:title" content="FoodPlatform - Доставка еды">
+    <meta property="og:description" content="Каталог товаров, корзина, оформление заказов с доставкой">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:image" content="{{ request.build_absolute_uri }}{% static 'img/ban1.png' %}">
+
+    <meta name="twitter:title" content="FoodPlatform - Доставка еды">
+    <meta name="twitter:description" content="Каталог товаров, корзина, оформление заказов с доставкой">
+    <meta name="twitter:image" content="{{ request.build_absolute_uri }}{% static 'img/ban1.png' %}">
+{% endblock %}
+
+{% block content %}
+
+    <h2 class="mb-4">Акции</h2>
+
+    <!-- Слайдер баннеров -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div id="promoCarousel" class="carousel slide promo-carousel shadow overflow-hidden" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+                    <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="1"></button>
+                    <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="2"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active" data-bs-interval="5000">
+                        <img src="{% static 'img/ban1.png' %}" class="d-block w-100 promo-slide-img" alt="Акция 1" loading="eager">
+                    </div>
+                    <div class="carousel-item" data-bs-interval="5000">
+                        <img src="{% static 'img/ban2.png' %}" class="d-block w-100 promo-slide-img" alt="Акция 2" loading="lazy">
+                    </div>
+                    <div class="carousel-item" data-bs-interval="5000">
+                        <img src="{% static 'img/ban3.png' %}" class="d-block w-100 promo-slide-img" alt="Скидка на пиццу" loading="lazy">
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#promoCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Назад</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#promoCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Вперёд</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Кнопка -->
+    <div class="text-center mt-4">
+        <a href="{% url 'index' %}" class="btn btn-warning">
+            Перейти в каталог
+        </a>
+    </div>
+
+{% endblock %}
